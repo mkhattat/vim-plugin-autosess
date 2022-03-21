@@ -9,6 +9,7 @@ if exists('g:loaded_autosess') || &cp || version < 700
 	finish
 endif
 let g:loaded_autosess = 1
+let s:dying = 0
 
 
 if !exists('g:autosess_dir')
@@ -18,7 +19,8 @@ let s:session_file  = substitute(getcwd(), '[:\\/]', '%', 'g').'.vim'
 
 autocmd VimEnter *		if v:this_session == '' | let v:this_session = expand(g:autosess_dir).'/'.s:session_file | endif
 autocmd VimEnter * nested	if !argc()  | call AutosessRestore() | endif
-autocmd VimLeave *		if !v:dying | call AutosessUpdate()  | endif
+autocmd VimLeave *		if s:dying == 0 | call AutosessUpdate()  | endif
+command!  AutosessDelete call AutosessDelete()
 
 
 " 1. If 'swap file already exists' situation happens while restoring
@@ -52,11 +54,14 @@ function AutosessUpdate()
 	if !isdirectory(expand(g:autosess_dir))
 		call mkdir(expand(g:autosess_dir), 'p', 0700)
 	endif
-	if tabpagenr('$') > 1 || (s:WinNr() > 1 && !&diff)
+	if len(getbufinfo({'buflisted':1})) > 1
 		execute 'mksession! ' . fnameescape(v:this_session)
-	" elseif winnr('$') == 1 && line('$') == 1 && col('$') == 1
-	" 	call delete(v:this_session)
 	endif
+endfunction
+
+function AutosessDelete()
+	call delete(v:this_session)
+	let s:dying = 1
 endfunction
 
 
@@ -91,3 +96,4 @@ function s:FailIfSwapExists()
 		qa!
 	endif
 endfunction
+
