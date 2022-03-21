@@ -54,8 +54,8 @@ function AutosessUpdate()
 	endif
 	if tabpagenr('$') > 1 || (s:WinNr() > 1 && !&diff)
 		execute 'mksession! ' . fnameescape(v:this_session)
-	elseif winnr('$') == 1 && line('$') == 1 && col('$') == 1
-		call delete(v:this_session)
+	" elseif winnr('$') == 1 && line('$') == 1 && col('$') == 1
+	" 	call delete(v:this_session)
 	endif
 endfunction
 
