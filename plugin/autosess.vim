@@ -1,6 +1,6 @@
-" Maintainer: Alex Efros <powerman-asdf@ya.ru>
-" Version: 1.2.3
-" Last Modified: 2017-11-28
+" Maintainer: Mostafa Khattat <mostafa@khattat.nl>
+" Version: 1.2.4
+" Last Modified: 2022-03-22
 " License: This file is placed in the public domain.
 " URL: http://www.vim.org/scripts/script.php?script_id=3883
 " Description: Auto save/load sessions
@@ -21,6 +21,7 @@ autocmd VimEnter *		if v:this_session == '' | let v:this_session = expand(g:auto
 autocmd VimEnter * nested	if !argc()  | call AutosessRestore() | endif
 autocmd VimLeave *		if s:dying == 0 | call AutosessUpdate()  | endif
 command!  AutosessDelete call AutosessDelete()
+command!  AUtosessUpdate call AutosessUpdate()
 
 
 " 1. If 'swap file already exists' situation happens while restoring
