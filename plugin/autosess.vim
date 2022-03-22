@@ -21,7 +21,7 @@ autocmd VimEnter *		if v:this_session == '' | let v:this_session = expand(g:auto
 autocmd VimEnter * nested	if !argc()  | call AutosessRestore() | endif
 autocmd VimLeave *		if s:dying == 0 | call AutosessUpdate()  | endif
 command!  AutosessDelete call AutosessDelete()
-command!  AUtosessUpdate call AutosessUpdate()
+command!  AUtosessUpdate call AutosessUpdate(1)
 
 
 " 1. If 'swap file already exists' situation happens while restoring
@@ -51,11 +51,14 @@ function AutosessRestore()
 	endif
 endfunction
 
-function AutosessUpdate()
+function AutosessUpdate(...)
+	let force = get(a:, 1, 0)
 	if !isdirectory(expand(g:autosess_dir))
 		call mkdir(expand(g:autosess_dir), 'p', 0700)
 	endif
-	if len(getbufinfo({'buflisted':1})) > 1
+	if force == 0 && len(getbufinfo({'buflisted':1})) > 1
+		execute 'mksession! ' . fnameescape(v:this_session)
+	elseif force == 1
 		execute 'mksession! ' . fnameescape(v:this_session)
 	endif
 endfunction
